@@ -9,7 +9,7 @@
   (ql:quickload '(:alexandria :draw-cons-tree :fiveam)))
 
 (defpackage :traverser
-  (:use :commpn-lisp))
+  (:use :common-lisp))
 
 (in-package :traverser)
 
@@ -47,3 +47,10 @@
     (when (funcall fn (car ls))
       (eat fn ls)
       ls)))
+
+;;; ===================== test examples =============================
+;; https://github.com/sionescu/fiveam/blob/master/t/example.lisp
+;; https://www.darkchestnut.com/2018/how-to-write-5am-test-fixtures/
+;; https://quickref.common-lisp.net/fiveam.html
+;; importing functions
+;; https://lispcookbook.github.io/cl-cookbook/systems.html
