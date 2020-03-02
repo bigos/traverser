@@ -9,7 +9,8 @@
   (ql:quickload '(:alexandria :draw-cons-tree :fiveam)))
 
 (defpackage :traverser
-  (:use :common-lisp))
+  (:use :common-lisp)
+  (:import-from :fiveam test run run! ! def-suite is))
 
 (in-package :traverser)
 
@@ -54,3 +55,22 @@
 ;; https://quickref.common-lisp.net/fiveam.html
 ;; importing functions
 ;; https://lispcookbook.github.io/cl-cookbook/systems.html
+
+;;; testing ====================================
+;; https://gist.github.com/lagagain/1d2e416067f5e32f7b15e7d20e4a72c3
+
+(defun add2 (n)
+  (+ n 2))
+
+(test add2
+      "test the add2 function"
+      (is (= 2 (add2 0)))
+      (is (= 4 (add2 2))))
+
+;;; running single function test
+;; (run! 'add2)
+;; (5am:debug! 'add2) ; with debugging on failure
+;;; or repeat the same
+;; (!)
+;;; all tests
+;; (5am:run-all-tests)
