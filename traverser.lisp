@@ -62,7 +62,7 @@
 (test eat-while
   "test the eat-while function"
   (is (equal '(1 3 5) (eat-while #'oddp '(1 3 5 6 8))))
-  (is (equal '(2 4 6) (eat-while #'evenp '(2 4 6 7 9)))))
+  (is (equal '(2 4 6) (eat-while (lambda (x) (not (oddp x))) '(2 4 6 7 9)))))
 
 ;;; running single function test
 
