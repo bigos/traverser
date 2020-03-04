@@ -10,7 +10,7 @@
 
 (defpackage :traverser
   (:use :common-lisp)
-  (:import-from :fiveam test run run! ! def-suite is))
+  (:import-from :fiveam #:test #:run #:run! #:! #:def-suite #:is))
 
 (in-package :traverser)
 
@@ -59,16 +59,15 @@
 ;;; testing ====================================
 ;; https://gist.github.com/lagagain/1d2e416067f5e32f7b15e7d20e4a72c3
 
-(defun add2 (n)
-  (+ n 2))
-
-(test add2
-      "test the add2 function"
-      (is (= 2 (add2 0)))
-      (is (= 4 (add2 2))))
+(test eat-while
+  "test the eat-while function"
+  (is (equal '(1 3 5) (eat-while #'oddp '(1 3 5 6 8))))
+  (is (equal '(2 4 6) (eat-while #'evenp '(2 4 6 7 9)))))
 
 ;;; running single function test
-;; (run! 'add2)
+
+(run! 'eat-while)
+
 ;; (5am:debug! 'add2) ; with debugging on failure
 ;;; or repeat the same
 ;; (!)
