@@ -59,14 +59,19 @@
 ;;; testing ====================================
 ;; https://gist.github.com/lagagain/1d2e416067f5e32f7b15e7d20e4a72c3
 
+(5am:def-suite first-test-suite)
+(5am:in-suite first-test-suite)
+
 (test eat-while
   "test the eat-while function"
   (is (equal '(1 3 5) (eat-while #'oddp '(1 3 5 6 8))))
   (is (equal '(2 4 6) (eat-while (lambda (x) (not (oddp x))) '(2 4 6 7 9)))))
 
-;;; running single function test
+;;; different ways of running single function test
 
-(run! 'eat-while)
+;; (run! 'eat-while)
+(5am:run! 'first-test-suite)
+;; (5am:run-all-tests)
 
 ;; (5am:debug! 'add2) ; with debugging on failure
 ;;; or repeat the same
