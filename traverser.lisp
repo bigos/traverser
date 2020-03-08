@@ -14,7 +14,7 @@
 
 (in-package :traverser)
 
-;;; ==========================================================================
+;;; ==========================================================================80
 (defun dt (ls)
   (draw-cons-tree:draw-tree ls))
 
@@ -25,12 +25,12 @@
                           (deep-reverse (car ls))))
         (T (error "type of ~a is not recognised" (type-of ls)))))
 
-;;; ==========================================================================
+;;; ==========================================================================80
 (defun parents (obj)
   (loop for cl in (sb-mop:class-precedence-list (class-of obj))
         collect (sb-mop:class-name cl)))
 
-;;; ==========================================================================
+;;; ==========================================================================80
 ;;; find-if and member-if
 (defun first-matching (fn ls)
   (find-if (lambda (x) (handler-case (funcall fn x) (condition () nil))) ls))
