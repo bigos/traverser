@@ -6,7 +6,7 @@
 (declaim (optimize (safety 2) (debug 3)))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (ql:quickload '(:alexandria :draw-cons-tree :fiveam) :silent T))  ; silent suppresses feedback
+  (ql:quickload '(:alexandria :draw-cons-tree :fiveam) :silent T))  ; suppresses feedback
 
 (defpackage :traverser
   (:use :common-lisp)
