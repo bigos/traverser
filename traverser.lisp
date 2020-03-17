@@ -6,7 +6,7 @@
 (declaim (optimize (safety 2) (debug 3)))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (ql:quickload '(:alexandria :draw-cons-tree :fiveam)))
+  (ql:quickload '(:alexandria :draw-cons-tree :fiveam) :silent T))  ; silent suppresses feedback
 
 (defpackage :traverser
   (:use :common-lisp)
@@ -14,7 +14,9 @@
 
 (in-package :traverser)
 
-;;; ==========================================================================
+(format t "OOOOOOOOOOOOOO loaded the package OOOOOOOOOOOOOOOOOOOOOO~%")
+
+;;; ============================================================================
 (defun dt (ls)
   (draw-cons-tree:draw-tree ls))
 
@@ -25,12 +27,12 @@
                           (deep-reverse (car ls))))
         (T (error "type of ~a is not recognised" (type-of ls)))))
 
-;;; ==========================================================================
+;;; ============================================================================
 (defun parents (obj)
   (loop for cl in (sb-mop:class-precedence-list (class-of obj))
         collect (sb-mop:class-name cl)))
 
-;;; ==========================================================================
+;;; ============================================================================
 ;;; find-if and member-if
 (defun first-matching (fn ls)
   (find-if (lambda (x) (handler-case (funcall fn x) (condition () nil))) ls))
@@ -38,7 +40,7 @@
 (defun has-other-than (cl stack)
   (member-if-not cl stack))
 
-;;; ==========================================================================
+;;; ============================================================================
 (defun eat-while (fn ls)
   (labels ((eat (fn lz)
              (when (cdr lz)
@@ -49,14 +51,46 @@
       (eat fn ls)
       ls)))
 
-;;; ===================== test examples =============================
+;;; === appending ==============================================================
+(defparameter zzz nil)
+(setf zzz '(1))
+(setf (cdr zzz) '(2))
+(setf (cddr zzz) '(3))
+(format t "zzz is now ~A~%" zzz)
+;; zzz is now (1 2 3)
+(setf (cadr zzz) 'two)
+(format t "zzz is now ~A~%" zzz)
+;; zzz is now (1 TWO 3)
+(setf (caddr zzz) 'three)
+(format t "zzz is now ~A~%" zzz)
+;; zzz is now (1 TWO THREE)
+
+;;; ================= joining ==================================================
+(defun can-join (stack index)
+  nil)
+
+;;; ================= simple  structures =======================================
+
+(defun build-struct (n p r)
+  (list n p r))
+
+(defun struct-inst (s)
+  (car s))
+
+(defun struct-params (s)
+  (cadr s))
+
+(defun struct-data (s)
+  (caddr s))
+
+;;; ===================== test examples ========================================
 ;; https://github.com/sionescu/fiveam/blob/master/t/example.lisp
 ;; https://www.darkchestnut.com/2018/how-to-write-5am-test-fixtures/
 ;; https://quickref.common-lisp.net/fiveam.html
 ;; importing functions
 ;; https://lispcookbook.github.io/cl-cookbook/systems.html
 
-;;; testing ====================================
+;;; testing ====================================================================
 ;; https://gist.github.com/lagagain/1d2e416067f5e32f7b15e7d20e4a72c3
 
 (5am:def-suite first-test-suite)
