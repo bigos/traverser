@@ -14,7 +14,7 @@
 
 (in-package :traverser)
 
-(format t "OOOOOOOOOOOOOO loaded the package OOOOOOOOOOOOOOOOOOOOOO~%")
+;; (format t "OOOOOOOOOOOOOO loaded the package OOOOOOOOOOOOOOOOOOOOOO~%")
 
 ;;; ============================================================================
 (defun dt (ls)
@@ -65,9 +65,17 @@
 (format t "zzz is now ~A~%" zzz)
 ;; zzz is now (1 TWO THREE)
 
+(append '(1 2 3) '(4 5))                ; (1 2 3 4 5)
+
 ;;; ================= joining ==================================================
-(defun can-join (stack index)
-  nil)
+(defun can-join (stack)
+  (cond ((and
+          (and  (consp (car  stack))
+                (eq    (caar stack)
+                       's))
+          (characterp (cadr stack))))
+        (T nil)))
+;; (can-join (list (build-struct 's nil "z") #\b))
 
 ;;; ================= simple  structures =======================================
 
