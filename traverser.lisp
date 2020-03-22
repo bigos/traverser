@@ -112,6 +112,18 @@
 (defmacro struct-data (s)
   `(caddr ,s))
 
+;;; ============= destructuring ================================================
+
+(defparameter aaa (build-struct 'a 'par 'res ))
+;;; AAA
+
+(destructuring-bind (symbol parameter result)
+    aaa
+  `(,symbol ((,parameter))
+            ((,result)
+             '(((the-end))))))
+;; (A ((PAR)) ((RES) '(((THE-END)))))
+
 ;;; ===================== test examples ========================================
 ;; https://github.com/sionescu/fiveam/blob/master/t/example.lisp
 ;; https://www.darkchestnut.com/2018/how-to-write-5am-test-fixtures/
