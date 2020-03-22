@@ -37,7 +37,6 @@
   (loop for cl in (sb-mop:class-precedence-list (class-of obj))
         collect (sb-mop:class-name cl)))
 
-
 (defun classify (obj)
   (if (equal 'built-in-class (type-of obj))
       obj
@@ -104,14 +103,14 @@
 (defun build-struct (n p r)
   (list n p r))
 
-(defun struct-inst (s)
-  (car s))
+(defmacro struct-inst (s)
+  `(car ,s))
 
-(defun struct-params (s)
-  (cadr s))
+(defmacro struct-params (s)
+  `(cadr ,s))
 
-(defun struct-data (s)
-  (caddr s))
+(defmacro struct-data (s)
+  `(caddr ,s))
 
 ;;; ===================== test examples ========================================
 ;; https://github.com/sionescu/fiveam/blob/master/t/example.lisp
