@@ -27,10 +27,32 @@
                           (deep-reverse (car ls))))
         (T (error "type of ~a is not recognised" (type-of ls)))))
 
-;;; ============================================================================
+;;; === objects ================================================================
+
+(defparameter tclass (cadr (sb-mop:compute-class-precedence-list
+                            (class-of 'symbol)))
+  "find T which is the top class of SBCL object system")
+
 (defun parents (obj)
   (loop for cl in (sb-mop:class-precedence-list (class-of obj))
         collect (sb-mop:class-name cl)))
+
+
+(defun classify (obj)
+  (if (equal 'built-in-class (type-of obj))
+      obj
+      (class-of obj)))
+
+(defun class-parents (obj)
+  (sb-mop:compute-class-precedence-list (classify obj)))
+
+(defun subclasses (obj)
+  (sb-mop:class-direct-subclasses
+   (classify obj)))
+
+(defun superclasses (obj)
+  (sb-mop:class-direct-superclasses
+   (classify obj)))
 
 ;;; ============================================================================
 ;;; find-if and member-if
