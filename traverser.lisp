@@ -114,7 +114,7 @@
 
 ;;; ============= destructuring ================================================
 
-(defparameter aaa (build-struct 'a 'par 'res ))
+(defparameter aaa (build-struct 'a (cons 0 2) "abc" ))
 ;;; AAA
 
 (destructuring-bind (symbol parameter result)
@@ -123,6 +123,24 @@
             ((,result)
              '(((the-end))))))
 ;; (A ((PAR)) ((RES) '(((THE-END)))))
+
+;;; ================= tree growing =============================================
+
+(defun sconc (str1 str2 i2)
+  "Concatenate string STR1 and I2 element of STR2"
+  (concatenate 'string str1 (string (aref str2 i2))))
+
+(defun eat (el s2 i2)
+  "consume EL adding I2 element of S2"
+  (let ((par (cadr el))
+        (res (caddr el)))
+    (list (car el)
+          (cons (car par) (1+ (cdr par)))
+          (sconc res s2 i2))))
+;; TRAVERSER> aaa
+;; (A (0 . 2) "abc")
+;; TRAVERSER> (eat aaa "def" 0)
+;; (A (0 . 3) "abcd")
 
 ;;; ===================== test examples ========================================
 ;; https://github.com/sionescu/fiveam/blob/master/t/example.lisp
