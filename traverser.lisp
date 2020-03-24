@@ -130,6 +130,7 @@
   "Concatenate string STR1 and I2 element of STR2"
   (concatenate 'string str1 (string (aref str2 i2))))
 
+;;; naive version
 (defun eat (el s2 i2)
   "consume EL adding I2 element of S2"
   (let ((par (cadr el))
