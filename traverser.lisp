@@ -20,6 +20,9 @@
 (defun dt (ls)
   (draw-cons-tree:draw-tree ls))
 
+;;; debugging during execution a'la byebug
+;; (loop for x from 1 to 5 collect (progn (inspect x) x))
+
 (defun myself ()
   ;; in (inspect obj) (myself) becomes the obj
   sb-ext:*inspected*)
