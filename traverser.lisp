@@ -20,6 +20,10 @@
 (defun dt (ls)
   (draw-cons-tree:draw-tree ls))
 
+(defun myself ()
+  ;; in (inspect obj) (myself) becomes the obj
+  sb-ext:*inspected*)
+
 (defun deep-reverse (ls)
   (cond ((null ls) ls)
         ((atom ls) ls)
@@ -133,11 +137,18 @@
 ;;; naive version
 (defun eat (el s2 i2)
   "consume EL adding I2 element of S2"
-  (let ((par (cadr el))
-        (res (caddr el)))
-    (list (car el)
+  (let ((par (struct-params el))
+        (dat (struct-data el)))
+
+
+
+
+
+
+
+    (list (struct-inst el)
           (cons (car par) (1+ (cdr par)))
-          (sconc res s2 i2))))
+          (sconc dat s2 i2))))
 ;; TRAVERSER> aaa
 ;; (A (0 . 2) "abc")
 ;; TRAVERSER> (eat aaa "def" 0)
