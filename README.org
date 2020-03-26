@@ -1,0 +1,11 @@
+* Traverser
+
+** Debugging
+
+[[http://lispcookbook.github.io/cl-cookbook/debugging.html][debugging]]
+
+#+begin_src lisp
+  ;;; debugging during execution a'la byebug
+  (loop for x from 1 to 5 collect (progn (inspect x) x))
+  (loop for x from 1 to 3 collect (progn (break) x))
+#+end_src
