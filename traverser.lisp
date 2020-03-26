@@ -20,8 +20,10 @@
 (defun dt (ls)
   (draw-cons-tree:draw-tree ls))
 
+;; https://lispcookbook.github.io/cl-cookbook/debugging.html
 ;;; debugging during execution a'la byebug
-;; (loop for x from 1 to 5 collect (progn (inspect x) x))
+;;; (loop for x from 1 to 5 collect (progn (inspect x) x))
+:;; (loop for x from 1 to 3 collect (progn (break) x))
 
 (defun myself ()
   ;; in (inspect obj) (myself) becomes the obj
