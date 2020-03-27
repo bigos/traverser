@@ -29,6 +29,9 @@
   ;; in (inspect obj) (myself) becomes the obj
   sb-ext:*inspected*)
 
+(defun ansicolors ()
+  (loop for x from 30 to 37 do (format t " <~c[~am ##~c[m ~a> "  #\Esc x #\Esc x)))
+
 (defun deep-reverse (ls)
   (cond ((null ls) ls)
         ((atom ls) ls)
