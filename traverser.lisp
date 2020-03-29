@@ -52,9 +52,6 @@ no codes are supplied."
 
 ;;; === objects ================================================================
 
-(defparameter tclass (cadr (sb-mop:compute-class-precedence-list
-                            (class-of 'symbol)))
-  "find T which is the top class of SBCL object system")
 
 (defun parents (obj)
   (loop for cl in (sb-mop:class-precedence-list (class-of obj))
@@ -83,28 +80,17 @@ no codes are supplied."
    (ignore-errors
      (sb-mop:class-direct-superclasses (classify obj)))))
 
-;; (defun class-children (obj)
-;;   (list
-;;    (if (atom obj)
-;;        (progn
-;;          (break "on atom")
-;;          (handler-case
-;;              (sb-mop:class-direct-subclasses obj)
-;;            (error (c)
-;;              (list obj 'error c))))
-;;        (progn
-;;          (break)
-;;          (loop for cl in obj collect (handler-case
-;;                                          (class-children cl)
-;;                                        (error (e)
-;;                                          (list cl 'error-rec e))))))))
+(defparameter tclass (cadr (sb-mop:compute-class-precedence-list
+                            (class-of 'symbol)))
+  "find T which is the top class of SBCL object system")
+
 (defun class-children (obj)
   (list obj
         (loop
            for cl in
              (sb-mop:class-direct-subclasses obj)
            collect
-             (list (class-children cl)))))
+             (class-children cl))))
 
 ;;; ============================================================================
 ;;; find-if and member-if
