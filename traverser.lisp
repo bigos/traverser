@@ -29,6 +29,12 @@
   ;; in (inspect obj) (myself) becomes the obj
   sb-ext:*inspected*)
 
+(defun ansicolors-codes (&optional (codes ""))
+  "Create ansi-codes fragment. When a code or semicolon separated codes are
+supplied use them to create opening fragment. Or create closing fragment when
+no codes are supplied."
+  (format nil "~c[~am" #\Esc codes))
+
 ;;; make sure you have
 ;; ~/.emacs.d/elpa/slime-xxxxxxxx.yyyy/contrib/slime-repl-ansi-color.el
 (defun ansicolors ()
@@ -36,12 +42,6 @@
                                        (ansicolors-codes (format nil "~s;40" x))
                                        x
                                        (ansicolors-codes))))
-
-(defun ansicolors-codes (&optional (codes ""))
-  "Create ansi-codes fragment. When a code or semicolon separated codes are
-supplied use them to create opening fragment. Or create closing fragment when
-no codes are supplied."
-  (format nil "~c[~am" #\Esc codes))
 
 (defun deep-reverse (ls)
   (cond ((null ls) ls)
@@ -80,8 +80,7 @@ no codes are supplied."
    (ignore-errors
      (sb-mop:class-direct-superclasses (classify obj)))))
 
-(defparameter tclass (cadr (sb-mop:compute-class-precedence-list
-                            (class-of 'symbol)))
+(defparameter tclass (find-class 'T)
   "find T which is the top class of SBCL object system")
 
 (defun class-children (obj)
@@ -90,7 +89,7 @@ no codes are supplied."
            for cl in
              (sb-mop:class-direct-subclasses obj)
            collect
-             (class-children cl))))
+             (remove-if #'null  (class-children cl)))))
 
 ;;; ============================================================================
 ;;; find-if and member-if
