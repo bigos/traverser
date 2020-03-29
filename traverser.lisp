@@ -58,7 +58,8 @@ no codes are supplied."
 
 (defun parents (obj)
   (loop for cl in (sb-mop:class-precedence-list (class-of obj))
-        collect (sb-mop:class-name cl)))
+     collect cl                         ;(sb-mop:class-name cl)
+       ))
 
 (defun classify (obj)
   (if (equal 'built-in-class (type-of obj))
@@ -81,6 +82,29 @@ no codes are supplied."
      (sb-mop:class-direct-superclasses obj))
    (ignore-errors
      (sb-mop:class-direct-superclasses (classify obj)))))
+
+;; (defun class-children (obj)
+;;   (list
+;;    (if (atom obj)
+;;        (progn
+;;          (break "on atom")
+;;          (handler-case
+;;              (sb-mop:class-direct-subclasses obj)
+;;            (error (c)
+;;              (list obj 'error c))))
+;;        (progn
+;;          (break)
+;;          (loop for cl in obj collect (handler-case
+;;                                          (class-children cl)
+;;                                        (error (e)
+;;                                          (list cl 'error-rec e))))))))
+(defun class-children (obj)
+  (list obj
+        (loop
+           for cl in
+             (sb-mop:class-direct-subclasses obj)
+           collect
+             (list (class-children cl)))))
 
 ;;; ============================================================================
 ;;; find-if and member-if
