@@ -222,7 +222,8 @@ no codes are supplied."
      (format t "ii - inspect in debugger~%")
      (format t "i - inspect~%")
      (format t "c - children~%")
-     (format t "p - parents~%"))
+     (format t "p - parents~%")
+     (format t "t - top of the hierarchy~%"))
 
     ((equal "ii" input)                 ;inspect in debugger
      (break))
@@ -239,7 +240,7 @@ no codes are supplied."
      (let ((children (loop
                         for n = 1 then (1+ n)
                         and cl in (sb-mop:class-direct-subclasses current-class)
-                        collect (list n cl))))
+                        collect (list n cl (length (sb-mop:class-direct-superclasses cl))))))
        (if (> (length children) 0)
            (progn
              (format t "~A~%" children)
@@ -260,6 +261,11 @@ no codes are supplied."
              (let ((parent-id (parse-integer (read-line))))
                (setf current-class (cadr (assoc parent-id parents)))))
            (format t "no more parents~%"))))
+
+    ((equal "t" input)                 ;top of the hierarchy
+     (format t "going back to the top~%")
+     (setf current-class (find-class 't)))
+
 
     (T
      (format t "unimplemented command ~A" input)))
