@@ -69,10 +69,18 @@ no codes are supplied."
   (sb-mop:compute-class-precedence-list (classify obj)))
 
 (defun subclasses (obj)
-  (sb-mop:class-direct-subclasses obj))
+  (list
+   (ignore-errors
+     (sb-mop:class-direct-subclasses obj))
+   (ignore-errors
+     (sb-mop:class-direct-subclasses (classify obj)))))
 
 (defun superclasses (obj)
-  (sb-mop:class-direct-superclasses obj))
+  (list
+   (ignore-errors
+     (sb-mop:class-direct-superclasses obj))
+   (ignore-errors
+     (sb-mop:class-direct-superclasses (classify obj)))))
 
 ;;; ============================================================================
 ;;; find-if and member-if
