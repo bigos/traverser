@@ -240,20 +240,26 @@ no codes are supplied."
                         for n = 1 then (1+ n)
                         and cl in (sb-mop:class-direct-subclasses current-class)
                         collect (list n cl))))
-       (format t "~A~%" children)
-       (format t "enter child number ")
-       (let ((child-id (parse-integer (read-line))))
-         (setf current-class (cadr (assoc child-id children))))))
+       (if (> (length children) 0)
+           (progn
+             (format t "~A~%" children)
+             (format t "enter child number ")
+             (let* ((child-id (parse-integer (read-line))))
+               (setf current-class (cadr (assoc child-id children)))))
+           (format t "no further children~%"))))
 
     ((equal "p" input)                  ;parents
      (let ((parents (loop
                        for n = 1 then (1+ n)
                        and cl in (sb-mop:class-direct-superclasses current-class)
                        collect (list n cl))))
-       (format t "~A~%" parents)
-       (format t "enter parent number ")
-       (let ((parent-id (parse-integer (read-line))))
-         (setf current-class (cadr (assoc parent-id parents))))))
+       (if (> (length parents) 0)
+           (progn
+             (format t "~A~%" parents)
+             (format t "enter parent number ")
+             (let ((parent-id (parse-integer (read-line))))
+               (setf current-class (cadr (assoc parent-id parents)))))
+           (format t "no more parents~%"))))
 
     (T
      (format t "unimplemented command ~A" input)))
@@ -261,12 +267,11 @@ no codes are supplied."
   current-class)
 
 (defun main ()
-  (let ((prompt "welcome")
-        (input "help")
+  (let ((input "help")
         (current-class (find-class 'T)))
     (loop until (equal input "quit")
        do
          (unless (equal "" input)
            (setf current-class (process input current-class)))
-         (format t "~A ~A " prompt current-class)
+         (format t "~A > " current-class)
          (setf input (read-line)))))
