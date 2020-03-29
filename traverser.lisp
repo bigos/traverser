@@ -32,7 +32,15 @@
 ;;; make sure you have
 ;; ~/.emacs.d/elpa/slime-xxxxxxxx.yyyy/contrib/slime-repl-ansi-color.el
 (defun ansicolors ()
-  (loop for x from 30 to 37 do (format t " ~c[~am #~a#~c[m"  #\Esc x x #\Esc)))
+  (loop for x from 30 to 37 do (format t "~A#~a#~A "
+                                       (ansicolors-codes (format nil "~s;40" x))
+                                       x
+                                       (ansicolors-codes))))
+
+(defun ansicolors-codes (&optional (codes ""))
+  "Create ansi-codes fragment. When codes are supplied use them to create
+opening fragment. Or create closing fragment when no codes are supplied."
+  (format nil "~c[~am" #\Esc codes))
 
 (defun deep-reverse (ls)
   (cond ((null ls) ls)
