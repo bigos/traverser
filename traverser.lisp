@@ -38,8 +38,9 @@
                                        (ansicolors-codes))))
 
 (defun ansicolors-codes (&optional (codes ""))
-  "Create ansi-codes fragment. When codes are supplied use them to create
-opening fragment. Or create closing fragment when no codes are supplied."
+  "Create ansi-codes fragment. When a code or semicolon separated codes are
+supplied use them to create opening fragment. Or create closing fragment when
+no codes are supplied."
   (format nil "~c[~am" #\Esc codes))
 
 (defun deep-reverse (ls)
@@ -68,12 +69,10 @@ opening fragment. Or create closing fragment when no codes are supplied."
   (sb-mop:compute-class-precedence-list (classify obj)))
 
 (defun subclasses (obj)
-  (sb-mop:class-direct-subclasses
-   (classify obj)))
+  (sb-mop:class-direct-subclasses obj))
 
 (defun superclasses (obj)
-  (sb-mop:class-direct-superclasses
-   (classify obj)))
+  (sb-mop:class-direct-superclasses obj))
 
 ;;; ============================================================================
 ;;; find-if and member-if
