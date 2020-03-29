@@ -29,8 +29,10 @@
   ;; in (inspect obj) (myself) becomes the obj
   sb-ext:*inspected*)
 
+;;; make sure you have
+;; ~/.emacs.d/elpa/slime-xxxxxxxx.yyyy/contrib/slime-repl-ansi-color.el
 (defun ansicolors ()
-  (loop for x from 30 to 37 do (format t " <~c[~am ##~c[m ~a> "  #\Esc x #\Esc x)))
+  (loop for x from 30 to 37 do (format t " ~c[~am #~a#~c[m"  #\Esc x x #\Esc)))
 
 (defun deep-reverse (ls)
   (cond ((null ls) ls)
