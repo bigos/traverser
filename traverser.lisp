@@ -173,13 +173,6 @@ no codes are supplied."
   "consume EL adding I2 element of S2"
   (let ((par (struct-params el))
         (dat (struct-data el)))
-
-
-
-
-
-
-
     (list (struct-inst el)
           (cons (car par) (1+ (cdr par)))
           (sconc dat s2 i2))))
@@ -217,3 +210,63 @@ no codes are supplied."
 ;; (!)
 ;;; all tests
 ;; (5am:run-all-tests)
+
+;;; ================== main ====================================================
+(defun process (input current-class)
+  (format t "~%~%processing > ~A~&" input)
+
+  (cond
+    ((equal "help" input)
+     (format t "commands:~%")
+     (format t "help - this help~%")
+     (format t "ii - inspect in debugger~%")
+     (format t "i - inspect~%")
+     (format t "c - children~%")
+     (format t "p - parents~%"))
+
+    ((equal "ii" input)                 ;inspect in debugger
+     (break))
+
+    ((equal "i" input)                  ;inspect
+     (progn
+       (let ((parents (sb-mop:class-direct-superclasses current-class)))
+         (format t "parent path is: ~A~%" (sb-mop:compute-class-precedence-list current-class))
+         (format t "parents is: ~A~%" parents)))
+     (format t "current class ~A~%" current-class)
+     (format t "children ~A~%" (sb-mop:class-direct-subclasses current-class)))
+
+    ((equal "c" input)                  ;children
+     (let ((children (loop
+                        for n = 1 then (1+ n)
+                        and cl in (sb-mop:class-direct-subclasses current-class)
+                        collect (list n cl))))
+       (format t "~A~%" children)
+       (format t "enter child number ")
+       (let ((child-id (parse-integer (read-line))))
+         (setf current-class (cadr (assoc child-id children))))))
+
+    ((equal "p" input)                  ;parents
+     (let ((parents (loop
+                       for n = 1 then (1+ n)
+                       and cl in (sb-mop:class-direct-superclasses current-class)
+                       collect (list n cl))))
+       (format t "~A~%" parents)
+       (format t "enter parent number ")
+       (let ((parent-id (parse-integer (read-line))))
+         (setf current-class (cadr (assoc parent-id parents))))))
+
+    (T
+     (format t "unimplemented command ~A" input)))
+  (format t "~%")
+  current-class)
+
+(defun main ()
+  (let ((prompt "welcome")
+        (input "help")
+        (current-class (find-class 'T)))
+    (loop until (equal input "quit")
+       do
+         (unless (equal "" input)
+           (setf current-class (process input current-class)))
+         (format t "~A ~A " prompt current-class)
+         (setf input (read-line)))))
