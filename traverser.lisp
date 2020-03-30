@@ -1,7 +1,7 @@
 ;;; traverser
 
-;; interesting project
-;; https://github.com/vsedach/Vacietis/blob/master/compiler/reader.lisp
+;;; this is an example traversin SBCL class graph allowing you to inspect
+;;; the nodes, see help for more options
 
 (declaim (optimize (safety 2) (debug 3)))
 
