@@ -85,11 +85,15 @@ no codes are supplied."
                        and cl in (sb-mop:class-direct-superclasses current-class)
                        collect (list n cl))))
        (if (> (length parents) 0)
-           (progn
-             (format t "~A~%" parents)
-             (format t "enter parent number ")
-             (let ((parent-id (parse-integer (read-line))))
-               (setf current-class (cadr (assoc parent-id parents)))))
+           (if (equal (length parents) 1)
+               (progn
+                 (format t "~A we has only one parent~%" current-class)
+                 (setf current-class (cadr (assoc 1 parents))))
+               (progn
+                 (format t "~A~%" parents)
+                 (format t "enter parent number ")
+                 (let ((parent-id (parse-integer (read-line))))
+                   (setf current-class (cadr (assoc parent-id parents))))))
            (format t "no more parents~%"))))
 
     ((equal "t" input)                 ;top of the hierarchy
