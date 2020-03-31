@@ -1,5 +1,12 @@
 * Traverser
 
+** Description
+
+This is an example of traversing SBCL class graph allowing you to inspect the
+nodes.
+
+See help in the source code for more options.
+
 ** Debugging
 
 [[http://lispcookbook.github.io/cl-cookbook/debugging.html][debugging]]
