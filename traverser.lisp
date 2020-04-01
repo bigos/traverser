@@ -42,8 +42,42 @@ no codes are supplied."
         (T (error "type of ~a is not recognised" (type-of ls)))))
 
 ;;; ================== main ====================================================
+(defun process-c (current-class)
+  (let ((children (loop
+                     for n = 1 then (1+ n)
+                     and cl in (sb-mop:class-direct-subclasses current-class)
+                     collect (list n cl (length (sb-mop:class-direct-superclasses cl))))))
+    (if (> (length children) 0)
+        (progn
+          (format t "~%~A~%~%" children)
+          (format t "enter child number from ~a to ~a >" (car (first children)) (caar (last children)))
+          (let ((child-id (parse-integer (read-line))))
+            (cadr (assoc child-id children))))
+        (progn
+          (format t "no more children")
+          current-class))))
+
+(defun process-p (current-class)
+  (let ((parents (loop
+                    for n = 1 then (1+ n)
+                    and cl in (sb-mop:class-direct-superclasses current-class)
+                    collect (list n cl))))
+    (if (> (length parents) 0)
+        (if (equal (length parents) 1)
+            (progn
+              (format t "~A we has only one parent" current-class)
+              (cadr (assoc 1 parents)))
+            (progn
+              (format t "~%~A~%~%" parents)
+              (format t "enter parent number ")
+              (let ((parent-id (parse-integer (read-line))))
+                (cadr (assoc parent-id parents)))))
+        (progn
+          (format t "no more parents")
+          current-class))))
+
 (defun process (input current-class)
-  (format t "~%~%processing > ~A~&" input)
+  (format t "~&~%processing > ~A~&" input)
 
   (cond
     ((equal "help" input)
@@ -53,58 +87,34 @@ no codes are supplied."
      (format t "i - inspect~%")
      (format t "c - children~%")
      (format t "p - parents~%")
-     (format t "t - top of the hierarchy~%"))
+     (format t "t - top of the hierarchy~%")
+     current-class)
 
     ((equal "ii" input)                 ;inspect in debugger
-     (break))
+     (break)
+     current-class)
 
     ((equal "i" input)                  ;inspect
      (progn
        (let ((parents (sb-mop:class-direct-superclasses current-class)))
-         (format t "parent path is: ~A~%" (sb-mop:compute-class-precedence-list current-class))
+         (format t "~%parent path is: ~A~%" (sb-mop:compute-class-precedence-list current-class))
          (format t "parents is: ~A~%" parents)))
      (format t "current class ~A~%" current-class)
-     (format t "children ~A~%" (sb-mop:class-direct-subclasses current-class)))
+     (format t "children ~A~%" (sb-mop:class-direct-subclasses current-class))
+     current-class)
 
     ((equal "c" input)                  ;children
-     (let ((children (loop
-                        for n = 1 then (1+ n)
-                        and cl in (sb-mop:class-direct-subclasses current-class)
-                        collect (list n cl (length (sb-mop:class-direct-superclasses cl))))))
-       (if (> (length children) 0)
-           (progn
-             (format t "~A~%" children)
-             (format t "enter child number from ~a to ~a >" (car (first children)) (caar (last children)))
-             (let* ((child-id (parse-integer (read-line))))
-               (setf current-class (cadr (assoc child-id children)))))
-           (format t "no further children~%"))))
+     (process-c current-class))
 
     ((equal "p" input)                  ;parents
-     (let ((parents (loop
-                       for n = 1 then (1+ n)
-                       and cl in (sb-mop:class-direct-superclasses current-class)
-                       collect (list n cl))))
-       (if (> (length parents) 0)
-           (if (equal (length parents) 1)
-               (progn
-                 (format t "~A we has only one parent~%" current-class)
-                 (setf current-class (cadr (assoc 1 parents))))
-               (progn
-                 (format t "~A~%" parents)
-                 (format t "enter parent number ")
-                 (let ((parent-id (parse-integer (read-line))))
-                   (setf current-class (cadr (assoc parent-id parents))))))
-           (format t "no more parents~%"))))
+     (process-p current-class))
 
-    ((equal "t" input)                 ;top of the hierarchy
+    ((equal "t" input)                  ;top of the hierarchy
      (format t "going back to the top~%")
-     (setf current-class (find-class 't)))
-
+     (find-class 't))
 
     (T
-     (format t "unimplemented command ~A" input)))
-  (format t "~%")
-  current-class)
+     (format t "unimplemented command ~A" input))))
 
 (defun main ()
   (let ((input "help")
@@ -113,5 +123,7 @@ no codes are supplied."
        do
          (unless (equal "" input)
            (setf current-class (process input current-class)))
-         (format t "~A > " current-class)
+         (when (null current-class)
+           (setf current-class (find-class 't)))
+         (format t "~&~%~A > " current-class)
          (setf input (read-line)))))
